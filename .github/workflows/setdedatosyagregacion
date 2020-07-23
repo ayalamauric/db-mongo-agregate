@@ -1,0 +1,61 @@
+
+//query
+db.compras.aggregate([
+  {$match: {"usuario": "Rodolfo"} }, //match por usuario, falta agregar usuario como variable
+  {$project: {
+    _id: 1,
+    items: {
+      $filter: {
+        input: "$items",
+        as: "item",
+        cond: { $eq: ["$$item.id", 2] },
+      },
+    },
+  }},
+  {$unwind: '$items'},  //generacion del array 
+  {$group: {
+      _id: null, 
+      "suma": {$sum: "$items.cantidad" } //suma del producto
+  }}
+])
+
+
+// set de datos // 1 documento. 
+{
+    "_id": {
+        "$oid": "5f18cceb2d51e33820390874"
+    },
+    "usuario": "Rodolfo",
+    "items": [{
+        "precio": {
+            "$numberDouble": "15.24"
+        },
+        "cantidad": {
+            "$numberInt": "1"
+        },
+        "id": {
+            "$numberInt": "2"
+        }
+    }, {
+        "precio": {
+            "$numberDouble": "15.24"
+        },
+        "cantidad": {
+            "$numberInt": "1"
+        },
+        "id": {
+            "$numberInt": "1"
+        }
+    }, {
+        "precio": {
+            "$numberDouble": "15.24"
+        },
+        "cantidad": {
+            "$numberInt": "3"
+        },
+        "id": {
+            "$numberInt": "4"
+        }
+    }]
+}
+
